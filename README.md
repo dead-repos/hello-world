@@ -1,2 +1,2 @@
-# Hi, I'm Sasukieh
-I code stuff, I guess.
+# Hi, I'm void
+i'M fUCKin gAYgAYgAYAGyaYAGaYAGAY gAY aS fOOK
