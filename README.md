@@ -1,2 +1,2 @@
 # Hi, I'm void
-i'M fUCKin gAYgAYgAYAGyaYAGaYAGAY gAY aS fOOK
+Hey there. I'm void, a coder & web dev.
