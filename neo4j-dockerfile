@@ -1,0 +1,72 @@
+# Pull from Docker hub or local images
+FROM neo4j:4.0.5-enterprise
+
+#Define source for Plugins
+ENV APOC_VERSION=4.0.0.13
+ENV APOC_URI=https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/${APOC_VERSION}/apoc-${APOC_VERSION}-all.jar
+
+ENV GRAPH_DATA_SCIENCE_VERSION=1.2.1
+ENV GRAPH_DATA_SCIENCE_URI=https://github.com/neo4j/graph-data-science/releases/download/${GRAPH_DATA_SCIENCE_VERSION}/neo4j-graph-data-science-${GRAPH_DATA_SCIENCE_VERSION}-standalone.jar
+
+#PLUGINS CONFIG
+ENV NEO4J_dbms_directories_import=import
+ENV NEO4J_dbms_security_procedures_unrestricted=gds.*,apoc.*
+ENV NEO4J_dbms_security_procedures_whitelist=gds.*,apoc.*
+
+#HTTPS CONNECTOR (is disabled because we do not have certificate)
+#ENV NEO4J_dbms_connector_https_type=HTTPS
+#ENV NEO4J_dbms_connector_https_enabled=true
+#ENV NEO4J_dbms_connector_https_encryption=TLS
+#ENV NEO4J_dbms_connector_https_address=0.0.0.0:7473
+
+#HTTP CONNECTOR
+ENV NEO4J_dbms_connector_http_enabled=true
+ENV NEO4J_dbms_connector_http_listen__address=0.0.0.0:7474
+
+#replace ip with host ip
+ENV NEO4J_dbms_connector_http_advertised__address=142.102.27.102:7474
+
+#BOLT CONNECTOR
+ENV NEO4J_dbms_connector_bolt_enabled=true
+ENV NEO4J_dbms_connector_bolt_listen__address=0.0.0.0:7687
+
+#replace ip with host ip
+ENV NEO4J_dbms_connector_bolt_advertised__address=142.102.27.102:7687
+
+#Disabled as HTTPS is disabled
+#ENV NEO4J_dbms_connector_bolt_tls__level=OPTIONAL
+
+#disabled authentication
+ENV NEO4J_dbms_security_auth__enabled=false
+
+#Accepting license, can be disbaled for community version
+ENV NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+
+#Upgrading neo4j enabled
+ENV NEO4J_dbms_allow__upgrade=true
+
+#log configuration
+#ENV NEO4J_dbms_tx__log_rotation_retention_policy=100M size
+
+#memory configuration
+ENV NEO4J_dbms_memory_pagecache_size=1G
+ENV NEO4J_dbms_memory_heap_max__size=2G
+
+
+#ENV NEO4J_apoc_export_file_enabled=true
+#ENV NEO4J_apoc_import_file_enabled=true
+#ENV NEO4J_apoc_import_file_use__neo4j__config=true
+
+#Uncomment below to make 'test' your default password
+#ENV NEO4J_AUTH=neo4j/test
+
+#provide permissions for the plugins downloaded into the plugins folder
+ADD --chown=neo4j:neo4j ${APOC_URI} plugins
+ADD --chown=neo4j:neo4j ${GRAPH_DATA_SCIENCE_URI} plugins
+
+
+#Define volumes, disbaled as we are mounting volumes during runtime
+#VOLUME ["/data"]
+
+#Command we want the container to run
+CMD [ "neo4j" ]
